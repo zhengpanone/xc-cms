@@ -84,7 +84,8 @@ public class CmsPageService {
     public CmsPageResult add(CmsPage cmsPage) {
         /**
          * 校验页面
-         * 根据页面名称、站点ID、页面webpath查询唯一性
+         * 根据页面名称、站点ID、页面webPath 查询唯一性
+         * mongodb创建联合索引 db.cms_page.ensureIndex({siteId:1,pageName:1,pageWebPath:1},{unique:true});
          */
         CmsPage cmspage1 = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
         if (cmspage1 == null) {

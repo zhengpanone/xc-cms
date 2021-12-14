@@ -33,7 +33,7 @@ public class CmsPageController implements CmsPageControllerApi {
 
     @Override
     @PostMapping("/add")
-    public CmsPageResult addCmsPage(@RequestBody CmsPage cmsPage) {
+    public CmsPageResult addCmsPage(@RequestBody CmsPage cmsPage) { // @RequestBody json数据转对象
         return cmsPageService.add(cmsPage);
     }
 }

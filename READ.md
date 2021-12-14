@@ -34,9 +34,12 @@ public interface ProjectRepository extends MongoRepository<com.zp.model.Project,
 ## API请求响应规范
 
 - get请求时,采用key/value格式请求,SpringMVC可采用基本变量接收,也可以采用对象接收
+
 - POST请求时,可以提交form表单数据(application/x-www-form-urlencoded)和Json数据(Content-Type=application/json),
 文件等多部件类型(multipart/form-data)三种数据格式,SpringMVC接收json数据使用@RequestBody注解解析请求jsons数据
+
 - 响应结果统一信息为: 是否成功、操作代码、提示信息及自定义数据
+
 - 响应结果统一格式为json
 
 ## API定义约束
