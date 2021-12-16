@@ -7,10 +7,13 @@ import com.zp.model.request.QueryPageRequest;
 import com.zp.response.CommonCode;
 import com.zp.response.QueryResponseResult;
 import com.zp.response.QueryResult;
+import com.zp.response.ResponseResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * @author zheng
@@ -95,4 +98,42 @@ public class CmsPageService {
         }
         return new CmsPageResult(CommonCode.FAIL, null);
     }
+
+    // 根据ID查找页面
+    public CmsPage findById(String id) {
+        Optional<CmsPage> optional = cmsPageRepository.findById(id);
+        if (optional.isPresent()) {
+            CmsPage cmsPage = optional.get();
+            return cmsPage;
+        }
+        return null;
+
+    }
+
+    // 修改页面
+    public CmsPageResult update(String id, CmsPage cmsPage) {
+        CmsPage one = this.findById(id);
+        if (one != null) {
+            one.setPageAliase(cmsPage.getPageAliase());
+            one.setPageName(cmsPage.getPageName());
+            one.setSiteId(cmsPage.getSiteId());
+            one.setTemplateId(cmsPage.getTemplateId());
+            one.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
+            one.setPageWebPath(cmsPage.getPageWebPath());
+            cmsPageRepository.save(one);
+            return new CmsPageResult(CommonCode.SUCCESS, one);
+        }
+        return new CmsPageResult(CommonCode.FAIL, null);
+    }
+
+    public ResponseResult delete(String id){
+        Optional<CmsPage> byId = cmsPageRepository.findById(id);
+        if(byId.isPresent()){
+            cmsPageRepository.deleteById(id);
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+
+        return new ResponseResult(CommonCode.FAIL);
+    }
+
 }

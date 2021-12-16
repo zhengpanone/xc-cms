@@ -6,6 +6,7 @@ import com.zp.model.cms.CmsPage;
 import com.zp.model.cms.response.CmsPageResult;
 import com.zp.model.request.QueryPageRequest;
 import com.zp.response.QueryResponseResult;
+import com.zp.response.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +36,23 @@ public class CmsPageController implements CmsPageControllerApi {
     @PostMapping("/add")
     public CmsPageResult addCmsPage(@RequestBody CmsPage cmsPage) { // @RequestBody json数据转对象
         return cmsPageService.add(cmsPage);
+    }
+
+    @Override
+    @GetMapping("/get/{id}")
+    public CmsPage findById(@PathVariable("id") String id) {
+        return cmsPageService.findById(id);
+    }
+
+    @Override
+    @PutMapping("/edit/{id}")
+    public CmsPageResult edit(@PathVariable("id") String id, @RequestBody CmsPage page) {
+        return cmsPageService.update(id,page);
+    }
+
+    @Override
+    @DeleteMapping("/delete/{id}")
+    public ResponseResult delete(@PathVariable("id") String id) {
+        return cmsPageService.delete(id);
     }
 }
