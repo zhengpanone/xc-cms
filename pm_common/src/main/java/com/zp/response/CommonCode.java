@@ -9,7 +9,9 @@ public enum CommonCode implements ResultCode {
      */
     SUCCESS(true, 10000, "操作成功！"),
 
-    FAIL(false, 11111, "操作失败");
+    FAIL(false, 11111, "操作失败"),
+    SERVER_ERROR(false,9999,"系统繁忙请稍后重启！"),
+    INVALID_PARAM(false, 10003,"非法参数！");
     //操作是否成功
     boolean success;
     // 操作代码

@@ -1,7 +1,9 @@
 package com.zp.manage_cms.service;
 
+import com.zp.exception.ExceptionCast;
 import com.zp.manage_cms.dao.CmsPageRepository;
 import com.zp.model.cms.CmsPage;
+import com.zp.model.cms.response.CmsCode;
 import com.zp.model.cms.response.CmsPageResult;
 import com.zp.model.request.QueryPageRequest;
 import com.zp.response.CommonCode;
@@ -91,6 +93,9 @@ public class CmsPageService {
          * mongodb创建联合索引 db.cms_page.ensureIndex({siteId:1,pageName:1,pageWebPath:1},{unique:true});
          */
         CmsPage cmspage1 = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if(cmspage1!=null){
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+        }
         if (cmspage1 == null) {
             cmsPage.setPageId(null);
             cmsPageRepository.save(cmsPage);
