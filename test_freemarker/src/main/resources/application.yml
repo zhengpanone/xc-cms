@@ -1,0 +1,15 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: test_freemarker
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: pm_cms
+
+  freemarker:
+    cache: false # 关闭缓存
+    settings:
+      template_update_delay: 0 # 检查模板更新延迟时间, 设置0表示立即检查
