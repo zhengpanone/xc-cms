@@ -1,9 +1,12 @@
 package com.zp.manage_cms.service;
 
 import com.zp.exception.ExceptionCast;
+import com.zp.manage_cms.dao.CmsConfigRepository;
 import com.zp.manage_cms.dao.CmsPageRepository;
+import com.zp.model.cms.CmsConfig;
 import com.zp.model.cms.CmsPage;
 import com.zp.model.cms.response.CmsCode;
+import com.zp.model.cms.response.CmsConfigResult;
 import com.zp.model.cms.response.CmsPageResult;
 import com.zp.model.request.QueryPageRequest;
 import com.zp.response.CommonCode;
@@ -14,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -24,6 +28,10 @@ import java.util.Optional;
 public class CmsPageService {
     @Autowired
     CmsPageRepository cmsPageRepository;
+    @Autowired
+    private CmsConfigRepository cmsConfigRepository;
+    @Autowired
+    RestTemplate restTemplate;
 
     /**
      * 页面查询
@@ -93,7 +101,7 @@ public class CmsPageService {
          * mongodb创建联合索引 db.cms_page.ensureIndex({siteId:1,pageName:1,pageWebPath:1},{unique:true});
          */
         CmsPage cmspage1 = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
-        if(cmspage1!=null){
+        if (cmspage1 != null) {
             ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
         }
         if (cmspage1 == null) {
@@ -131,14 +139,25 @@ public class CmsPageService {
         return new CmsPageResult(CommonCode.FAIL, null);
     }
 
-    public ResponseResult delete(String id){
+    public ResponseResult delete(String id) {
         Optional<CmsPage> byId = cmsPageRepository.findById(id);
-        if(byId.isPresent()){
+        if (byId.isPresent()) {
             cmsPageRepository.deleteById(id);
             return new ResponseResult(CommonCode.SUCCESS);
         }
 
         return new ResponseResult(CommonCode.FAIL);
+    }
+
+
+    // 根据Id查询cmsConfig
+    public CmsConfigResult getConfigById(String id) {
+        Optional<CmsConfig> optional = cmsConfigRepository.findById(id);
+        if (optional.isPresent()) {
+            CmsConfig cmsConfig = optional.get();
+            return new CmsConfigResult(CommonCode.SUCCESS, cmsConfig);
+        }
+        return new CmsConfigResult(CommonCode.FAIL, null);
     }
 
 }
