@@ -1,0 +1,10 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: xc_cms_manage_cms
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: xc_cms
