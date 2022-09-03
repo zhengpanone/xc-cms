@@ -125,16 +125,13 @@ public class CmsPageService {
          * 根据页面名称、站点ID、页面webPath 查询唯一性
          * mongodb创建联合索引 db.cms_page.ensureIndex({siteId:1,pageName:1,pageWebPath:1},{unique:true});
          */
-        CmsPage cmspage1 = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
-        if (cmspage1 != null) {
+        CmsPage existCmsPage = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        if (existCmsPage != null) {
             ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
         }
-        if (cmspage1 == null) {
-            cmsPage.setPageId(null);
-            cmsPageRepository.save(cmsPage);
-            return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
-        }
-        return new CmsPageResult(CommonCode.FAIL, null);
+        cmsPage.setPageId(null);
+        cmsPageRepository.save(cmsPage);
+        return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
     }
 
     // 根据ID查找页面
@@ -158,6 +155,7 @@ public class CmsPageService {
             one.setTemplateId(cmsPage.getTemplateId());
             one.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
             one.setPageWebPath(cmsPage.getPageWebPath());
+            one.setPageType(cmsPage.getPageType());
             cmsPageRepository.save(one);
             return new CmsPageResult(CommonCode.SUCCESS, one);
         }

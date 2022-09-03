@@ -23,7 +23,7 @@ public interface CmsPageControllerApi {
      * @param page             页码
      * @param size             记录树
      * @param queryPageRequest 查询参数
-     * @return
+     * @return 分页的page
      */
     @ApiOperation("分页查询页面列表")
     @ApiImplicitParams({
@@ -42,11 +42,16 @@ public interface CmsPageControllerApi {
     CmsPageResult addCmsPage(CmsPage page);
 
     @ApiOperation("根据ID查询页面信息")
+    @ApiImplicitParams(@ApiImplicitParam(name = "id", value = "页面ID", required = true, paramType = "path", dataType = "string"))
     CmsPage findById(String id);
 
     @ApiOperation("修改页面")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "页面ID")
+    })
     CmsPageResult edit(String id, CmsPage page);
 
     @ApiOperation("通过ID删除页面")
+    @ApiImplicitParam(name = "id",value = "页面ID")
     ResponseResult delete(String id);
 }
