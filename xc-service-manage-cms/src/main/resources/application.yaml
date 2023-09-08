@@ -8,3 +8,6 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017
       database: xc_cms
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

@@ -156,6 +156,7 @@ public class CmsPageService {
             one.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
             one.setPageWebPath(cmsPage.getPageWebPath());
             one.setPageType(cmsPage.getPageType());
+            one.setDataUrl(cmsPage.getDataUrl());
             cmsPageRepository.save(one);
             return new CmsPageResult(CommonCode.SUCCESS, one);
         }

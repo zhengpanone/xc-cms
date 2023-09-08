@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiOperation;
  * @author zhengpanone
  * @since 2021-12-23
  */
-@Api(value = "cms配置管理接口", tags = {"cms配置管理接口"})
+@Api(value = "cms配置管理接口", tags = {"cms配置管理接口,提供数据模型管理、查询接口"})
 public interface CmsConfigControllerApi {
     @ApiOperation("根据ID查询CMS配置信息")
     CmsConfigResult getModel(String id);

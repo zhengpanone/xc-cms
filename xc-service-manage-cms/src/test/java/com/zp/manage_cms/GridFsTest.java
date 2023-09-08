@@ -52,4 +52,10 @@ public class GridFsTest {
         String content = IOUtils.toString(gridFsResource.getInputStream(), "utf-8");
         System.out.println(content);
     }
+
+    @Test
+    public void testDeleteGridFs() {
+        // 根据文件ID删除fs.files和fs.chunks中的记录
+        gridFsTemplate.delete(Query.query(Criteria.where("_id").is("622f1d19e9ef46161009647e")));
+    }
 }
