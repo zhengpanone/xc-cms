@@ -13,9 +13,6 @@
     <name>xc-service-manage-cms</name>
     <description>Demo project for Spring Boot API</description>
 
-    <properties>
-        <java.version>11</java.version>
-    </properties>
 
     <dependencies>
 
@@ -106,13 +103,6 @@
                      </dependency>
                  </dependencies>&ndash;&gt;
              </plugin>-->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 
