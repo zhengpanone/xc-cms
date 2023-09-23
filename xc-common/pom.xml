@@ -24,7 +24,7 @@
         <!--        http client end-->
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
+            <artifactId>springfox-swagger2</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

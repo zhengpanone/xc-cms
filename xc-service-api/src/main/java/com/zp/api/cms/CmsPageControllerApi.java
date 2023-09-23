@@ -47,11 +47,11 @@ public interface CmsPageControllerApi {
 
     @ApiOperation("修改页面")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id",value = "页面ID")
+            @ApiImplicitParam(name = "id", value = "页面ID")
     })
     CmsPageResult edit(String id, CmsPage page);
 
     @ApiOperation("通过ID删除页面")
-    @ApiImplicitParam(name = "id",value = "页面ID")
+    @ApiImplicitParam(name = "id", value = "页面ID")
     ResponseResult delete(String id);
 }

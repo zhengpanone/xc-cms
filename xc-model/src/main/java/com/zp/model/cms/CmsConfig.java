@@ -19,8 +19,11 @@ import java.util.List;
 public class CmsConfig {
     @Id
     private String id; // 主键
+
+    // 数据模型名称
     @ApiModelProperty("数据模型名称")
-    private String name;// 数据模型名称
+    private String name;
+
     @ApiModelProperty("数据模型")
     private List<CmsConfigModel> models;// 数据模型项目
 }

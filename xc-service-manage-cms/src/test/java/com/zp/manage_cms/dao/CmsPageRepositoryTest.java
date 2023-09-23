@@ -2,10 +2,12 @@ package com.zp.manage_cms.dao;
 
 import com.zp.model.cms.CmsPage;
 import com.zp.model.cms.CmsPageParam;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-
-//@RunWith(SpringRunner.class)
+@RunWith(SpringRunner.class)
 public class CmsPageRepositoryTest {
     @Autowired
     CmsPageRepository cmsPageRepository;
@@ -34,6 +35,11 @@ public class CmsPageRepositoryTest {
         cmsPage.setPageParams(cmsPageParams);
         CmsPage save = cmsPageRepository.save(cmsPage);
         System.out.println(save);
+    }
+    @Test
+    public void testFindById(){
+        Optional<CmsPage> result = cmsPageRepository.findById("650f18b84f8406c8a0967a7f");
+        result.ifPresent(System.out::println);
     }
 
     @Test
