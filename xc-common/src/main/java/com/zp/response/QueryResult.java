@@ -9,7 +9,6 @@ import java.util.List;
  * @author zheng
  */
 @Data
-@ToString
 public class QueryResult<T> {
     // 数据列表
     private List<T> list;

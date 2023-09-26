@@ -1,6 +1,6 @@
 package com.zp.model.request;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,21 +13,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "页面查询条件")
 public class QueryPageRequest {
     //接收页面查询条件
-    @ApiModelProperty("站点ID")
+    @Schema(description ="站点ID")
     private String siteId;
 
-    @ApiModelProperty("页面ID")
+    @Schema(description ="页面ID")
     private String pageId;
 
-    @ApiModelProperty("页面名称")
+    @Schema(description ="页面名称")
     private String pageName;
 
-    @ApiModelProperty("别名")
+    @Schema(description ="别名")
     private String pageAliase;
 
-    @ApiModelProperty("模板ID")
+    @Schema(description ="模板ID")
     private String templateId;
 
 }

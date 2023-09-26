@@ -1,11 +1,11 @@
 package com.zp.api.cms;
 
 import com.zp.response.QueryResponseResult;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api(value = "cms站点管理接口", tags = {"cms站点管理接口"})
+@Tag(name = "cms站点管理接口", description = "cms站点管理接口")
 public interface CmsSiteControllerApi {
-    @ApiOperation("查询所有站点")
+    @Operation(summary = "查询所有站点",description = "查询")
     QueryResponseResult findList();
 }

@@ -2,8 +2,8 @@ package com.zp.manage_cms.dao;
 
 import com.zp.model.cms.CmsPage;
 import com.zp.model.cms.CmsPageParam;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
 public class CmsPageRepositoryTest {
     @Autowired
     CmsPageRepository cmsPageRepository;
@@ -36,8 +35,9 @@ public class CmsPageRepositoryTest {
         CmsPage save = cmsPageRepository.save(cmsPage);
         System.out.println(save);
     }
+
     @Test
-    public void testFindById(){
+    public void testFindById() {
         Optional<CmsPage> result = cmsPageRepository.findById("650f18b84f8406c8a0967a7f");
         result.ifPresent(System.out::println);
     }
@@ -53,17 +53,17 @@ public class CmsPageRepositoryTest {
 
     }
 
-    //自定义条件查询
+    // 自定义条件查询
     @Test
     public void testFindAllByExample() {
         int page = 0;
         int size = 10;
         PageRequest pageable = PageRequest.of(page, size);
-        //条件值对象
+        // 条件值对象
         CmsPage cmsPage = new CmsPage();
-//        cmsPage.setTemplateId("5a925be7b00ffc4b3c1578b5");
+        // cmsPage.setTemplateId("5a925be7b00ffc4b3c1578b5");
         cmsPage.setPageAliase("轮播");
-// 条件匹配器
+        // 条件匹配器
         // .contains() 包含\ .startsWith() 前缀匹配
         ExampleMatcher exampleMatcher = ExampleMatcher
                 .matching()
@@ -76,11 +76,11 @@ public class CmsPageRepositoryTest {
         System.out.println(content);
     }
 
-    //分页查询
+    // 分页查询
     @Test
     public void testFindPage() {
         // 分页参数
-        int page = 0;//从0开始
+        int page = 0;// 从0开始
         int size = 10;
         Pageable pageable = PageRequest.of(page, size);
 

@@ -9,7 +9,6 @@ import lombok.ToString;
  * @author zheng
  */
 @Data
-@ToString
 @NoArgsConstructor
 public class ResponseResult implements Response {
     //操作是否成功

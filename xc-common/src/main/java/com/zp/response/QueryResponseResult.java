@@ -8,7 +8,6 @@ import lombok.ToString;
  * @author zheng
  */
 @Data
-@ToString
 public class QueryResponseResult extends ResponseResult {
     QueryResult queryResult;
 

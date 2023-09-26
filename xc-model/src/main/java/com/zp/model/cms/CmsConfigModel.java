@@ -1,7 +1,7 @@
 package com.zp.model.cms;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -14,13 +14,13 @@ import java.util.Map;
  * @since 2021-12-23
  */
 @Data
-@ApiModel
+@Schema(description = "cms configModel")
 public class CmsConfigModel {
     @Id
     private String key;// 主键
-    @ApiModelProperty("项目名称")
+    @Schema(description = "项目名称",defaultValue = "项目名称", title = "id")
     private String name; // 项目名称
-    @ApiModelProperty("项目url")
+    @Schema(description = "项目url",defaultValue = "http://www.example.com", title = "url")
     private String url; // 项目url
     private Map mapValue; // 项目复杂值
     private String value; // 项目简单值

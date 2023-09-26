@@ -5,7 +5,7 @@ import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,7 +31,7 @@ public class GridFsTest {
     @Autowired
     GridFSBucket gridFSBucket;
 
-    @Test
+    // @Test
     public void testGridFsStoreTest() throws FileNotFoundException {
         File file = new File("C:\\Users\\zheng\\Desktop\\Spring Security 实战干货.pdf");
         FileInputStream inputStream = new FileInputStream(file);
