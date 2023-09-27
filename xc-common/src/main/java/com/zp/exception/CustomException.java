@@ -2,6 +2,8 @@ package com.zp.exception;
 
 import com.zp.response.IErrorCode;
 import com.zp.response.ResultCode;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * CommonException 自定义异常类型
@@ -9,6 +11,8 @@ import com.zp.response.ResultCode;
  * @author zhengpanone
  * @since 2021-12-16
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class CustomException extends RuntimeException implements IErrorCode {
     private long code;
     // 提示信息

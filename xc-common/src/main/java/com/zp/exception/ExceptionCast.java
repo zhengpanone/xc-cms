@@ -1,7 +1,6 @@
 package com.zp.exception;
 
 import com.zp.response.IErrorCode;
-import com.zp.response.ResultCode;
 
 /**
  * ExceptionCast 异常捕获类
