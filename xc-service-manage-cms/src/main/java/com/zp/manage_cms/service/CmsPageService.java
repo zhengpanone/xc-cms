@@ -10,14 +10,8 @@ import com.zp.manage_cms.dao.CmsTemplateRepository;
 import com.zp.model.cms.CmsConfig;
 import com.zp.model.cms.CmsPage;
 import com.zp.model.cms.CmsTemplate;
-import com.zp.model.cms.response.CmsCode;
-import com.zp.model.cms.response.CmsConfigResult;
-import com.zp.model.cms.response.CmsPageResult;
+import com.zp.model.cms.response.CmsResultCode;
 import com.zp.model.request.QueryPageRequest;
-import com.zp.response.CommonCode;
-import com.zp.response.QueryResponseResult;
-import com.zp.response.QueryResult;
-import com.zp.response.ResponseResult;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -66,17 +60,17 @@ public class CmsPageService {
      * @param queryPageRequest 查询参数
      * @return QueryResponseResult
      */
-    public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest) {
+    public Page<CmsPage> findList(Integer page, Integer size, QueryPageRequest queryPageRequest) {
         if (queryPageRequest == null) {
             queryPageRequest = new QueryPageRequest();
         }
-        //自定义条件查询
+        // 自定义条件查询
         // 定义条件匹配器
         ExampleMatcher exampleMatcher = ExampleMatcher
                 .matching()
                 .withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
 
-        //条件值对象
+        // 条件值对象
         CmsPage cmsPage = new CmsPage();
         // 设置条件值
         if (StringUtils.isNotEmpty(queryPageRequest.getSiteId())) {
@@ -92,9 +86,9 @@ public class CmsPageService {
             cmsPage.setPageName(queryPageRequest.getPageName());
         }
 
-        //定义条件对象
+        // 定义条件对象
         Example<CmsPage> example = Example.of(cmsPage, exampleMatcher);
-        //分页参数
+        // 分页参数
         if (page <= 0) {
             page = 1;
         }
@@ -104,13 +98,10 @@ public class CmsPageService {
         page = page - 1;
         Pageable pageable = PageRequest.of(page, size);
 
-        QueryResult<CmsPage> queryResult = new QueryResult();
-        //实现自定义条件并且分页查询
-        Page<CmsPage> all = cmsPageRepository.findAll(example, pageable);
-        queryResult.setList(all.getContent());//数据列表
-        queryResult.setTotal(all.getTotalElements());//数据总记录数
-        QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS, queryResult);
-        return queryResponseResult;
+
+        // 实现自定义条件并且分页查询
+        return cmsPageRepository.findAll(example, pageable);
+
     }
 
     /**
@@ -119,7 +110,7 @@ public class CmsPageService {
      * @param cmsPage cmsPage
      * @return CmsPageResult
      */
-    public CmsPageResult add(CmsPage cmsPage) {
+    public void add(CmsPage cmsPage) {
         /**
          * 校验页面
          * 根据页面名称、站点ID、页面webPath 查询唯一性
@@ -127,11 +118,10 @@ public class CmsPageService {
          */
         CmsPage existCmsPage = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
         if (existCmsPage != null) {
-            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
+            ExceptionCast.cast(CmsResultCode.CMS_ADDPAGE_EXISTSNAME);
         }
         cmsPage.setPageId(null);
         cmsPageRepository.save(cmsPage);
-        return new CmsPageResult(CommonCode.SUCCESS, cmsPage);
     }
 
     // 根据ID查找页面
@@ -146,7 +136,8 @@ public class CmsPageService {
     }
 
     // 修改页面
-    public CmsPageResult update(String id, CmsPage cmsPage) {
+    public String update(String id, CmsPage cmsPage) {
+        String message = "";
         CmsPage one = this.findById(id);
         if (one != null) {
             one.setPageAliase(cmsPage.getPageAliase());
@@ -158,30 +149,31 @@ public class CmsPageService {
             one.setPageType(cmsPage.getPageType());
             one.setDataUrl(cmsPage.getDataUrl());
             cmsPageRepository.save(one);
-            return new CmsPageResult(CommonCode.SUCCESS, one);
+            return message;
         }
-        return new CmsPageResult(CommonCode.FAIL, null);
+        return message;
     }
 
-    public ResponseResult delete(String id) {
+    public String delete(String id) {
+        String message ="";
         Optional<CmsPage> byId = cmsPageRepository.findById(id);
         if (byId.isPresent()) {
             cmsPageRepository.deleteById(id);
-            return new ResponseResult(CommonCode.SUCCESS);
+            return message;
         }
 
-        return new ResponseResult(CommonCode.FAIL);
+        return message;
     }
 
 
     // 根据Id查询cmsConfig
-    public CmsConfigResult getConfigById(String id) {
+    public CmsConfig getConfigById(String id) {
         Optional<CmsConfig> optional = cmsConfigRepository.findById(id);
         if (optional.isPresent()) {
             CmsConfig cmsConfig = optional.get();
-            return new CmsConfigResult(CommonCode.SUCCESS, cmsConfig);
+            return cmsConfig;
         }
-        return new CmsConfigResult(CommonCode.FAIL, null);
+        return null;
     }
 
 
@@ -196,12 +188,12 @@ public class CmsPageService {
         // 获取数据模型
         Map model = getModelByPageId(pageId);
         if (model == null) {
-            ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_DATAISNULL);
+            ExceptionCast.cast(CmsResultCode.CMS_GENERATEHTML_DATAISNULL);
         }
         // 获取页面模板信息
         String template = getTemplateByPageId(pageId);
         if (StringUtils.isEmpty(template)) {
-            ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_TEMPLATEISNULL);
+            ExceptionCast.cast(CmsResultCode.CMS_GENERATEHTML_TEMPLATEISNULL);
         }
         // 执行静态化
         return generateHtml(template, model);
@@ -211,12 +203,12 @@ public class CmsPageService {
     private Map getModelByPageId(String pageId) {
         CmsPage cmsPage = this.findById(pageId);
         if (cmsPage == null) {
-            ExceptionCast.cast(CmsCode.CMS_PAGE_NOTEXISTS);
+            ExceptionCast.cast(CmsResultCode.CMS_PAGE_NOTEXISTS);
         }
         String dataUrl = cmsPage.getDataUrl();
         if (dataUrl == null) {
             // 页面Dataurl为空异常
-            ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_DATAURLISNULL);
+            ExceptionCast.cast(CmsResultCode.CMS_GENERATEHTML_DATAURLISNULL);
         }
         // 通过restTemplate请求数据
         ResponseEntity<Map> forEntity = restTemplate.getForEntity(dataUrl, Map.class);
@@ -227,11 +219,11 @@ public class CmsPageService {
     private String getTemplateByPageId(String pageId) {
         CmsPage cmsPage = this.findById(pageId);
         if (cmsPage == null) {
-            ExceptionCast.cast(CmsCode.CMS_PAGE_NOTEXISTS);
+            ExceptionCast.cast(CmsResultCode.CMS_PAGE_NOTEXISTS);
         }
         String templateId = cmsPage.getTemplateId();
         if (StringUtils.isEmpty(templateId)) {
-            ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_TEMPLATEISNULL);
+            ExceptionCast.cast(CmsResultCode.CMS_GENERATEHTML_TEMPLATEISNULL);
         }
         Optional<CmsTemplate> option = cmsTemplateRepository.findById(templateId);
         if (option.isPresent()) {
@@ -269,7 +261,7 @@ public class CmsPageService {
         try {
             // 获取模板
             Template template = configuration.getTemplate("template");
-            //调用API静态化
+            // 调用API静态化
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();

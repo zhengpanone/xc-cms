@@ -1,15 +1,13 @@
 package com.zp.api.cms;
 
 import com.zp.model.cms.CmsPage;
-import com.zp.model.cms.response.CmsPageResult;
 import com.zp.model.request.QueryPageRequest;
-import com.zp.response.QueryResponseResult;
-import com.zp.response.ResponseResult;
+import com.zp.response.CommonPage;
+import com.zp.response.CommonResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -28,12 +26,11 @@ public interface CmsPageControllerApi {
      * @return 分页的page
      */
     @Operation(summary = "分页查询页面列表")
-
     @Parameters({
             @Parameter(name = "page", description = "页码", required = true, in = ParameterIn.PATH),
             @Parameter(name = "size", description = "每页记录数", required = true, in = ParameterIn.PATH)
     })
-    QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest);
+    CommonResult<CommonPage<CmsPage>> findList(int page, int size, QueryPageRequest queryPageRequest);
 
     /**
      * 新增页面
@@ -42,7 +39,7 @@ public interface CmsPageControllerApi {
      * @return
      */
     @Operation(summary = "新增页面")
-    CmsPageResult addCmsPage(CmsPage page);
+    CommonResult<?> addCmsPage(CmsPage page);
 
     @Operation(summary = "根据ID查询页面信息")
     @Parameters(@Parameter(name = "id", description = "页面ID", required = true, in = ParameterIn.PATH))
@@ -52,9 +49,9 @@ public interface CmsPageControllerApi {
     @Parameters({
             @Parameter(name = "id", description = "页面ID")
     })
-    CmsPageResult edit(String id, CmsPage page);
+    CommonResult<?> edit(String id, CmsPage page);
 
     @Operation(summary = "通过ID删除页面")
     @Parameter(name = "id", description = "页面ID")
-    ResponseResult delete(String id);
+    CommonResult<?> delete(String id);
 }

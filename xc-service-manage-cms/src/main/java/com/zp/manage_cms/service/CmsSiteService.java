@@ -2,10 +2,10 @@ package com.zp.manage_cms.service;
 
 import com.zp.manage_cms.dao.CmsSitRepository;
 import com.zp.model.cms.CmsSite;
-import com.zp.response.CommonCode;
-import com.zp.response.QueryResponseResult;
-import com.zp.response.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +22,10 @@ public class CmsSiteService {
     @Autowired
     CmsSitRepository cmsSitRepository;
 
-    public QueryResponseResult findList() {
-        QueryResult queryResult = new QueryResult();
-        List<CmsSite> all = cmsSitRepository.findAll();
-        queryResult.setList(all);
-        queryResult.setTotal(all.size());
-        QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS, queryResult);
-        return queryResponseResult;
+    public Page<CmsSite> findList(Integer pageSize, Integer pageNum) {
+        Pageable pageable =  PageRequest.of(pageSize,pageNum);
+        Page<CmsSite> page = cmsSitRepository.findAll(pageable);
+        return page;
 
     }
 

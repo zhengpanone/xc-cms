@@ -3,11 +3,11 @@ package com.zp.manage_cms.controller;
 import com.zp.api.cms.CmsPageControllerApi;
 import com.zp.manage_cms.service.CmsPageService;
 import com.zp.model.cms.CmsPage;
-import com.zp.model.cms.response.CmsPageResult;
 import com.zp.model.request.QueryPageRequest;
-import com.zp.response.QueryResponseResult;
-import com.zp.response.ResponseResult;
+import com.zp.response.CommonPage;
+import com.zp.response.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +18,7 @@ public class CmsPageController implements CmsPageControllerApi {
 
     @Override
     @GetMapping("/list/{page}/{size}")
-    public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size, QueryPageRequest queryPageRequest) {
+    public CommonResult<CommonPage<CmsPage>> findList(@PathVariable("page") int pageNum, @PathVariable("size") int pageSize, QueryPageRequest queryPageRequest) {
        /* QueryResult<CmsPage> queryResult = new QueryResult<>();
         List<CmsPage> list = new ArrayList<>();
         CmsPage cmsPage = new CmsPage();
@@ -28,14 +28,16 @@ public class CmsPageController implements CmsPageControllerApi {
         queryResult.setTotal(1);
         QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS, queryResult);
         return queryResponseResult;*/
-        return cmsPageService.findList(page, size, queryPageRequest);
+        Page<CmsPage> page = cmsPageService.findList(pageNum, pageSize, queryPageRequest);
+        return CommonResult.success(CommonPage.restPage(page));
 
     }
 
     @Override
     @PostMapping("/add")
-    public CmsPageResult addCmsPage(@RequestBody CmsPage cmsPage) { // @RequestBody json数据转对象
-        return cmsPageService.add(cmsPage);
+    public CommonResult<?> addCmsPage(@RequestBody CmsPage cmsPage) {
+         cmsPageService.add(cmsPage);
+         return CommonResult.success();
     }
 
     @Override
@@ -46,13 +48,15 @@ public class CmsPageController implements CmsPageControllerApi {
 
     @Override
     @PutMapping("/edit/{id}")
-    public CmsPageResult edit(@PathVariable("id") String id, @RequestBody CmsPage page) {
-        return cmsPageService.update(id,page);
+    public CommonResult<?> edit(@PathVariable("id") String id, @RequestBody CmsPage page) {
+        String message = cmsPageService.update(id, page);
+        return CommonResult.success();
     }
 
     @Override
     @DeleteMapping("/delete/{id}")
-    public ResponseResult delete(@PathVariable("id") String id) {
-        return cmsPageService.delete(id);
+    public CommonResult<?> delete(@PathVariable("id") String id) {
+         cmsPageService.delete(id);
+         return CommonResult.success();
     }
 }

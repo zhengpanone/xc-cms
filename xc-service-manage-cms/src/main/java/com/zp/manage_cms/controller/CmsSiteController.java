@@ -2,11 +2,12 @@ package com.zp.manage_cms.controller;
 
 import com.zp.api.cms.CmsSiteControllerApi;
 import com.zp.manage_cms.service.CmsSiteService;
-import com.zp.response.QueryResponseResult;
+import com.zp.model.cms.CmsSite;
+import com.zp.response.CommonPage;
+import com.zp.response.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: zhengpanone
@@ -24,7 +25,8 @@ public class CmsSiteController implements CmsSiteControllerApi {
 
     @Override
     @GetMapping("/list")
-    public QueryResponseResult findList() {
-        return cmsSiteService.findList();
+    public CommonResult<CommonPage<CmsSite>> findList(@RequestParam(value = "page",defaultValue = "1") Integer pageNum, @RequestParam(value = "size",defaultValue = "5") Integer pageSize) {
+        Page<CmsSite> page = cmsSiteService.findList(pageNum, pageSize);
+        return CommonResult.success(CommonPage.restPage(page));
     }
 }

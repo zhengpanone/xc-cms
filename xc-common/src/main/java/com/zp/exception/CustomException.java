@@ -1,5 +1,6 @@
 package com.zp.exception;
 
+import com.zp.response.IErrorCode;
 import com.zp.response.ResultCode;
 
 /**
@@ -8,13 +9,22 @@ import com.zp.response.ResultCode;
  * @author zhengpanone
  * @since 2021-12-16
  */
-public class CustomException extends RuntimeException {
-    ResultCode resultCode;
-    public CustomException(ResultCode resultCode){
-        this.resultCode = resultCode;
-    }
-    public ResultCode getResultCode(){
-        return resultCode;
+public class CustomException extends RuntimeException implements IErrorCode {
+    private long code;
+    // 提示信息
+    private String message;
+    public CustomException(IErrorCode errorCode){
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
     }
 
+    @Override
+    public long getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

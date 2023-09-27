@@ -1,8 +1,8 @@
 package com.zp.exception;
 
 import com.google.common.collect.ImmutableMap;
-import com.zp.response.CommonCode;
-import com.zp.response.ResponseResult;
+import com.zp.response.CommonResult;
+import com.zp.response.IErrorCode;
 import com.zp.response.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +27,13 @@ public class ExceptionCatch {
 
     @ExceptionHandler(CustomException.class)
     @ResponseBody
-     public ResponseResult customException(CustomException customException){
+     public CommonResult<?> customException(CustomException customException){
         LOGGER.error("catch exception {}", customException.getMessage());
-         ResultCode resultCode = customException.getResultCode();
-         return new ResponseResult(resultCode);
+         return CommonResult.failed(customException);
      }
      @ExceptionHandler(Exception.class)
      @ResponseBody
-     public ResponseResult exception(Exception exception){
+     public CommonResult<?> exception(Exception exception){
          LOGGER.error("catch exception {}", exception.getMessage());
          if(EXCEPTIONS==null){
              EXCEPTIONS = builder.build(); // EXCEPTIONS 构建
@@ -42,12 +41,12 @@ public class ExceptionCatch {
          }
          ResultCode resultCode = EXCEPTIONS.get(exception.getClass());
          if(resultCode!=null){
-             return new ResponseResult(resultCode);
+             return CommonResult.failed(resultCode);
          }
-         return new ResponseResult(CommonCode.SERVER_ERROR);
+         return CommonResult.failed(ResultCode.SERVER_ERROR);
      }
 
      static {
-        builder.put(HttpMessageNotReadableException.class,CommonCode.INVALID_PARAM);
+        builder.put(HttpMessageNotReadableException.class,ResultCode.INVALID_PARAM);
      }
 }
