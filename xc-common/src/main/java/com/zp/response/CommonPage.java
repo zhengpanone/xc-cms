@@ -40,7 +40,7 @@ public class CommonPage<T> {
     public static <T> CommonPage<T> restPage(Page<T> pageInfo) {
         CommonPage<T> result = new CommonPage<T>();
         result.setTotalPage(pageInfo.getTotalPages());
-        result.setPageNum(pageInfo.getNumber());
+        result.setPageNum(pageInfo.getNumber()+1);
         result.setPageSize(pageInfo.getSize());
         result.setTotal(pageInfo.getTotalElements());
         result.setList(pageInfo.getContent());

@@ -95,9 +95,8 @@ public class CmsPageService {
         if (size <= 0) {
             size = 10;
         }
-        page = page - 1;
+        page= page -1;
         Pageable pageable = PageRequest.of(page, size);
-
 
         // 实现自定义条件并且分页查询
         return cmsPageRepository.findAll(example, pageable);

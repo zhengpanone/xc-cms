@@ -20,7 +20,7 @@ module.exports = {
 
       },
       '/api/cms': {
-        target: 'http://localhost:31001',
+        target: 'http://localhost:18091',
         pathRewrite: {
           '^/api': ''
         }
