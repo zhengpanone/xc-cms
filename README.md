@@ -82,3 +82,6 @@ Swagger常用注解
 
 - @ApiImplicitParam属性：
 
+
+# 页面静态化
+![img.png](img/img.png)
