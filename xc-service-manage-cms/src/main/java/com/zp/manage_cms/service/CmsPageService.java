@@ -109,7 +109,7 @@ public class CmsPageService {
      * @param cmsPage cmsPage
      * @return CmsPageResult
      */
-    public void add(CmsPage cmsPage) {
+    public CmsPage add(CmsPage cmsPage) {
         /**
          * 校验页面
          * 根据页面名称、站点ID、页面webPath 查询唯一性
@@ -121,6 +121,7 @@ public class CmsPageService {
         }
         cmsPage.setPageId(null);
         cmsPageRepository.save(cmsPage);
+        return cmsPage;
     }
 
     // 根据ID查找页面

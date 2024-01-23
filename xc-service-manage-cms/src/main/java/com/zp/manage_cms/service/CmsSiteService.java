@@ -23,7 +23,11 @@ public class CmsSiteService {
     CmsSitRepository cmsSitRepository;
 
     public Page<CmsSite> findList(Integer pageSize, Integer pageNum) {
-        Pageable pageable =  PageRequest.of(pageSize,pageNum);
+        if (pageSize <= 0) {
+            pageSize = 1;
+        }
+        pageSize = pageSize - 1;
+        Pageable pageable = PageRequest.of(pageSize, pageNum);
         Page<CmsSite> page = cmsSitRepository.findAll(pageable);
         return page;
 

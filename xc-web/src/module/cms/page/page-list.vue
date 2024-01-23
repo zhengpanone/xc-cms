@@ -1,6 +1,27 @@
 <template>
   <div>
-    <el-button type="primary" @click="handleQuery">查询</el-button>
+    <el-form :model="params" :inline="true">
+      <el-select v-model="params.siteId" clearable placeholder="请选择站点">
+        <el-option
+            v-for="item in siteList"
+            :key="item.siteId"
+            :label="item.siteName"
+            :value="item.siteId">
+        </el-option>
+      </el-select>
+
+      <el-form-item label="页面别名">
+        <el-input v-model="params.pageAliase" placeholder="页面别名"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="handleQuery">查询</el-button>
+      <router-link :to="{path: '/cms/page/add',query:{
+        page: this.params.page,
+        size: this.params.size,
+        siteId: this.params.siteId
+      }}">
+        <el-button type="primary">新增页面</el-button>
+      </router-link>
+    </el-form>
     <el-table
         :data="cmsPageList"
         border
@@ -13,9 +34,9 @@
       <el-table-column prop="pagePhysicalPath" label="物理路径" width="300"></el-table-column>
       <el-table-column prop="pageCreateTime" label="创建时间" width="180"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
-        <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+        <template slot-scope="page">
+          <el-button type="text" size="small" @click="edit(page.row.pageId)">编辑</el-button>
+          <el-button type="text" size="small" @click="deletePage(page.row.pageId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -36,15 +57,21 @@
 
 <script>
 import * as cmsApi from '../api/cms'
+import {page_edit} from "../api/cms";
 
 export default {
   mounted() {
+    this.handleQuerySiteList()
     this.handleQuery()
+  },
+  created() {
+    this.params.page = Number.parseInt(this.$route.query.page || 1)
+    this.params.size = Number.parseInt(this.$route.query.size || 10)
+    this.params.siteId = this.$route.query.siteId || ''
   },
   methods: {
     handleQuery() {
-      cmsApi.page_list(this.params.page,this.params.size,{}).then((res)=>{
-        console.log(res)
+      cmsApi.page_list(this.params.page, this.params.size, this.params).then((res) => {
         this.cmsPageList = res.data.list
         this.total = res.data.total
       })
@@ -55,16 +82,48 @@ export default {
     },
     handleSizeChange: function () {
 
+    },
+    handleQuerySiteList() {
+      cmsApi.site_list(1, 10, {}).then(res => {
+        this.siteList = res.data.list
+      })
+    },
+    edit(pageId) {
+      this.$router.push(
+          {
+            path: '/cms/page/edit/' + pageId,
+            query: {page: this.params.page, siteId: this.params.siteId}
+          }
+      )
+    },
+    deletePage(pageId) {
+      this.$confirm('确认是否删除页面', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        cmsApi.page_delete(pageId).then(res => {
+          if (res.code === 200) {
+            this.$message.success("删除成功")
+            this.handleQuery()
+          } else {
+            this.$message.error('删除失败')
+          }
+        })
+      })
+
     }
   },
 
   data() {
     return {
       cmsPageList: [],
+      siteList: [],
       total: 0,
       params: {
         page: 1,
-        size: 10
+        size: 10,
+        siteId: '',
+        pageAliase: ''
       }
     }
   },

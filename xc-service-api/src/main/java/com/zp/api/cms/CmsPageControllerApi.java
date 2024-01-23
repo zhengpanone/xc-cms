@@ -39,7 +39,7 @@ public interface CmsPageControllerApi {
      * @return
      */
     @Operation(summary = "新增页面")
-    CommonResult<?> addCmsPage(CmsPage page);
+    CommonResult<CmsPage> addCmsPage(CmsPage page);
 
     @Operation(summary = "根据ID查询页面信息")
     @Parameters(@Parameter(name = "id", description = "页面ID", required = true, in = ParameterIn.PATH))
