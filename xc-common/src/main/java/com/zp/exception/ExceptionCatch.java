@@ -22,8 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ExceptionCatch {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionCatch.class);
 
-    private static ImmutableMap<Class<? extends Throwable>, ResultCode> EXCEPTIONS;
-    protected static ImmutableMap.Builder<Class<? extends Throwable>,ResultCode> builder = ImmutableMap.builder();
+    private static ImmutableMap<Class<? extends Throwable>, IErrorCode> EXCEPTIONS;
+    // 定义异常类型所对应的错误代码
+    protected static ImmutableMap.Builder<Class<? extends Throwable>,IErrorCode> builder = ImmutableMap.builder();
 
     @ExceptionHandler(CustomException.class)
     @ResponseBody
@@ -39,7 +40,7 @@ public class ExceptionCatch {
              EXCEPTIONS = builder.build(); // EXCEPTIONS 构建
 
          }
-         ResultCode resultCode = EXCEPTIONS.get(exception.getClass());
+         IErrorCode resultCode = EXCEPTIONS.get(exception.getClass());
          if(resultCode!=null){
              return CommonResult.failed(resultCode);
          }
