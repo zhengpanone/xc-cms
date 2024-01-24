@@ -31,11 +31,11 @@ public class GridFsTest {
     @Autowired
     GridFSBucket gridFSBucket;
 
-    // @Test
+    @Test
     public void testGridFsStoreTest() throws FileNotFoundException {
-        File file = new File("C:\\Users\\zheng\\Desktop\\Spring Security 实战干货.pdf");
+        File file = new File("/Users/mac/Desktop/PDF/Flutter基础教程课件-B站免费版-v3.pdf");
         FileInputStream inputStream = new FileInputStream(file);
-        ObjectId objectId = gridFsTemplate.store(inputStream, "spring security.pdf");
+        ObjectId objectId = gridFsTemplate.store(inputStream, "Flutter基础教程课件-B站免费版-v3.pdf");
         System.out.println(objectId);
     }
 
@@ -55,6 +55,6 @@ public class GridFsTest {
     @Test
     public void testDeleteGridFs() {
         // 根据文件ID删除fs.files和fs.chunks中的记录
-        gridFsTemplate.delete(Query.query(Criteria.where("_id").is("622f1d19e9ef46161009647e")));
+        gridFsTemplate.delete(Query.query(Criteria.where("_id").is("65b0678787b652321a6cdd4d")));
     }
 }

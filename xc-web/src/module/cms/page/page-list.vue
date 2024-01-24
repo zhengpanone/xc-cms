@@ -37,6 +37,7 @@
         <template slot-scope="page">
           <el-button type="text" size="small" @click="edit(page.row.pageId)">编辑</el-button>
           <el-button type="text" size="small" @click="deletePage(page.row.pageId)">删除</el-button>
+          <el-button type="text" size="small" @click="preview(page.row.pageId)">页面预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -111,6 +112,9 @@ export default {
         })
       })
 
+    },
+    preview(pageId){
+      window.open("http://localhost/cms/preview/"+pageId)
     }
   },
 

@@ -15,3 +15,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  freemarker:
+    cache: false # 关闭模版缓存
+    settings:
+      template_update_delay: 0
