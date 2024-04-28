@@ -46,5 +46,83 @@ services:
       - /opt/dockerstore/nginx/conf.d:/etc/nginx/conf.d
       - /opt/dockerstore/nginx/log:/var/log/nginx
 
+  rabbitmq:
+    image: rabbitmq:3.10-management
+    container_name: rabbitmq
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    # hostname: rabbitmq
+    restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - /opt/dockerstore/rabbitmq/data:/var/lib/rabbitmq        # 防止log日志报failed to open log file
+      - /opt/dockerstore/rabbitmq/conf/rabbitmq.conf/etc/rabbitmq/rabbitmq.conf
+      - /opt/dockerstore/rabbitmq/log:/var/log/rabbitmq
+
+  minio:
+    image: minio/minio:latest                                    # 原镜像`minio/minio:latest`
+    container_name: minio                                        # 容器名为'minio'
+    restart: unless-stopped                                              # 指定容器退出后的重启策略为始终重启，但是不考虑在Docker守护进程启动时就已经停止了的容器
+    volumes: # 数据卷挂载路径设置,将本机目录映射到容器目录
+      - "/opt/dockerstore/minio/data:/data"
+      - "/opt/dockerstore/minio/minio:/minio"
+      - "/opt/dockerstore/minio/config:/root/.minio"
+    environment: # 设置环境变量,相当于docker run命令中的-e
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MINIO_PROMETHEUS_AUTH_TYPE: "public"
+      MINIO_ACCESS_KEY: "minio"                        # 登录账号
+      MINIO_SECRET_KEY: "minio123456"                    # 登录密码
+    command: server /data  --console-address ":9001"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    ports: # 映射端口
+      - "19000:9000" # 文件上传&预览端口
+      - "19001:9001" # 控制台访问端口
+
+  elasticsearch:
+    image: elasticsearch:7.14.1
+    container_name: es01
+    restart: unless-stopped
+    volumes:
+      - /opt/dockerstore/elasticsearch/data:/usr/share/elasticsearch/data
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    restart: always
+    environment:
+      - NEO4J_AUTH=neo4j/neo4j1234 # 默认用户名密码
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - /opt/dockerstore/neo4j/data:/data
+      - /opt/dockerstore/neo4j/config:/var/lib/neo4j/conf:rw
+      - /opt/dockerstore/neo4j/import:/var/lib/neo4j/import
+      - /opt/dockerstore/neo4j/plugins:/plugins
+      - /opt/dockerstore/neo4j/logs:/var/lib/neo4j/logs
+
 
 

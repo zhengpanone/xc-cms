@@ -1,4 +1,4 @@
-package config;
+package com.zp.config;
 
 import okhttp3.OkHttpClient;
 import org.apache.http.client.config.RequestConfig;

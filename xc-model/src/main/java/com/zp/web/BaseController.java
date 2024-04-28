@@ -1,4 +1,4 @@
-package web;
+package com.zp.web;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 
