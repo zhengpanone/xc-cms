@@ -8,7 +8,7 @@ spring:
     name: xc_cms_manage_cms-client
   data:
     mongodb:
-      uri: mongodb://xc_user:123456@localhost:27017
+      uri: mongodb://xc_user:123456@localhost:27017/xc_cms
       database: xc_cms
       username: xc_user
       password: 123456
@@ -32,4 +32,4 @@ xuecheng:
   mq:
     # cms客户端监控的队列名称（不同客户端监控的队列名称不能重复）
     queue: queue_cms_postpage_01
-    routingKey: 5a51f
+    routingKey: 5a51f # 此rotingKey为门户站点ID
