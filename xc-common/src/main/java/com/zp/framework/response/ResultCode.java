@@ -1,4 +1,4 @@
-package com.zp.response;
+package com.zp.framework.response;
 
 /**
  * 10000-- 通用错误代码

@@ -1,7 +1,6 @@
-package com.zp.exception;
+package com.zp.framework.exception;
 
-import com.zp.response.IErrorCode;
-import com.zp.response.ResultCode;
+import com.zp.framework.response.IErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,9 +1,9 @@
-package com.zp.exception;
+package com.zp.framework.exception;
 
 import com.google.common.collect.ImmutableMap;
-import com.zp.response.CommonResult;
-import com.zp.response.IErrorCode;
-import com.zp.response.ResultCode;
+import com.zp.framework.response.CommonResult;
+import com.zp.framework.response.IErrorCode;
+import com.zp.framework.response.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;

@@ -2,8 +2,8 @@ package com.zp.api.cms;
 
 import com.zp.model.cms.CmsPage;
 import com.zp.model.request.QueryPageRequest;
-import com.zp.response.CommonPage;
-import com.zp.response.CommonResult;
+import com.zp.framework.response.CommonPage;
+import com.zp.framework.response.CommonResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -54,4 +54,8 @@ public interface CmsPageControllerApi {
     @Operation(summary = "通过ID删除页面")
     @Parameter(name = "id", description = "页面ID")
     CommonResult<?> delete(String id);
+
+    @Operation(summary = "发布页面")
+    @Parameter(name = "pageId", description = "页面ID")
+    CommonResult<?> publishPage(String pageId);
 }

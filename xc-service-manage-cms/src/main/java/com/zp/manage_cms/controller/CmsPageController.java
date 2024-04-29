@@ -4,8 +4,8 @@ import com.zp.api.cms.CmsPageControllerApi;
 import com.zp.manage_cms.service.CmsPageService;
 import com.zp.model.cms.CmsPage;
 import com.zp.model.request.QueryPageRequest;
-import com.zp.response.CommonPage;
-import com.zp.response.CommonResult;
+import com.zp.framework.response.CommonPage;
+import com.zp.framework.response.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +56,14 @@ public class CmsPageController implements CmsPageControllerApi {
     @Override
     @DeleteMapping("/delete/{id}")
     public CommonResult<?> delete(@PathVariable("id") String id) {
-         cmsPageService.delete(id);
-         return CommonResult.success();
+        cmsPageService.delete(id);
+        return CommonResult.success();
+    }
+
+    @Override
+    @PostMapping("/publishPage/{pageId}")
+    public CommonResult<?> publishPage(@PathVariable("pageId") String pageId) {
+        cmsPageService.publishPage(pageId);
+        return CommonResult.success();
     }
 }

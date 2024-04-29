@@ -1,6 +1,6 @@
-package com.zp.exception;
+package com.zp.framework.exception;
 
-import com.zp.response.IErrorCode;
+import com.zp.framework.response.IErrorCode;
 
 /**
  * ExceptionCast 异常捕获类

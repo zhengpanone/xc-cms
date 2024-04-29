@@ -1,9 +1,12 @@
 package com.zp.manage_cms.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.zp.exception.ExceptionCast;
+import com.zp.framework.exception.ExceptionCast;
+import com.zp.manage_cms.config.RabbitmqConfig;
 import com.zp.manage_cms.dao.CmsConfigRepository;
 import com.zp.manage_cms.dao.CmsPageRepository;
 import com.zp.manage_cms.dao.CmsTemplateRepository;
@@ -12,12 +15,16 @@ import com.zp.model.cms.CmsPage;
 import com.zp.model.cms.CmsTemplate;
 import com.zp.model.cms.response.CmsResultCode;
 import com.zp.model.request.QueryPageRequest;
+import com.zp.framework.response.ResultCode;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.Version;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,6 +37,8 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -51,6 +60,8 @@ public class CmsPageService {
     GridFsTemplate gridFsTemplate;
     @Autowired
     GridFSBucket gridFSBucket;
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     /**
      * 页面查询
@@ -66,9 +77,7 @@ public class CmsPageService {
         }
         // 自定义条件查询
         // 定义条件匹配器
-        ExampleMatcher exampleMatcher = ExampleMatcher
-                .matching()
-                .withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
 
         // 条件值对象
         CmsPage cmsPage = new CmsPage();
@@ -95,7 +104,7 @@ public class CmsPageService {
         if (size <= 0) {
             size = 10;
         }
-        page= page -1;
+        page = page - 1;
         Pageable pageable = PageRequest.of(page, size);
 
         // 实现自定义条件并且分页查询
@@ -155,7 +164,7 @@ public class CmsPageService {
     }
 
     public String delete(String id) {
-        String message ="";
+        String message = "";
         Optional<CmsPage> byId = cmsPageRepository.findById(id);
         if (byId.isPresent()) {
             cmsPageRepository.deleteById(id);
@@ -250,7 +259,10 @@ public class CmsPageService {
 
     private String generateHtml(String templateContent, Map model) {
         // 创建配置对象
-        Configuration configuration = new Configuration(Configuration.getVersion());
+        // 使用兼容的 FreeMarker 版本号创建 Version 对象
+        Version compatibleVersion = new Version("2.3.31");
+        // 手动设置 incompatibleImprovements
+        Configuration configuration = new Configuration(compatibleVersion);
         // 创建模板加载器
         StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
         stringTemplateLoader.putTemplate("template", templateContent);
@@ -268,6 +280,64 @@ public class CmsPageService {
         }
         return null;
 
+    }
+
+    /**
+     * 页面发布
+     *
+     * @param pageId
+     * @return
+     */
+    public void publishPage(String pageId) {
+        // 页面静态化
+        String pageHtml = getPageHtml(pageId);
+        // 将页面静态化文件存储到GridFS中
+        CmsPage cmsPage = saveHtml(pageId, pageHtml);
+        // 向mq发送消息
+        sendPublishPage(cmsPage);
+    }
+
+    /**
+     * 保存html到gridFS
+     *
+     * @param pageId
+     * @param htmlContent
+     * @return
+     */
+    private CmsPage saveHtml(String pageId, String htmlContent) {
+        CmsPage cmsPage = findById(pageId);
+        if (cmsPage == null) {
+            ExceptionCast.cast(ResultCode.INVALID_PARAM);
+        }
+        ObjectId objectId = null;
+        try {
+            // 将htmlContent内容转成输入流
+            InputStream inputStream = IOUtils.toInputStream(htmlContent, "utf-8");
+            objectId = gridFsTemplate.store(inputStream, cmsPage.getPageName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }        // 将html文件内容保存到GridFS
+        // 将html文件id更新到cmsPage中
+        cmsPage.setHtmlFileId(objectId.toHexString());
+        cmsPageRepository.save(cmsPage);
+        return cmsPage;
+    }
+
+    /**
+     * 向mq发送消息
+     *
+     * @param cmsPage
+     */
+    private void sendPublishPage(CmsPage cmsPage) {
+        Map<String, String> msg = new HashMap<>();
+        msg.put("pageId", cmsPage.getPageId());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonMsg = objectMapper.writeValueAsString(msg);
+            rabbitTemplate.convertAndSend(RabbitmqConfig.EX_ROUTING_CMS_POST_PAGE, cmsPage.getSiteId(), jsonMsg);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

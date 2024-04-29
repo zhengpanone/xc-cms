@@ -1,8 +1,8 @@
 package com.zp.api.cms;
 
 import com.zp.model.cms.CmsSite;
-import com.zp.response.CommonPage;
-import com.zp.response.CommonResult;
+import com.zp.framework.response.CommonPage;
+import com.zp.framework.response.CommonResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

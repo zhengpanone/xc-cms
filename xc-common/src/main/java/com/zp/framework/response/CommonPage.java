@@ -1,9 +1,8 @@
-package com.zp.response;
+package com.zp.framework.response;
 
 import org.springframework.data.domain.Page;
 import com.github.pagehelper.PageInfo;
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.List;
 

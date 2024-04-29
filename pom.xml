@@ -17,6 +17,7 @@
         <module>xc-service-api</module>
         <module>xc-service-manage-cms</module>
         <module>xc-service-manage-cms-client</module>
+        <module>xc-service-manage-course</module>
     </modules>
 
     <properties>
@@ -163,6 +164,11 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -190,6 +196,7 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -205,6 +212,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>

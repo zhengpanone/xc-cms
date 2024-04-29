@@ -1,9 +1,8 @@
-package com.zp.response;
+package com.zp.framework.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
  * 通用返回对象

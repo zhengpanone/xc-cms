@@ -1,8 +1,7 @@
 package com.zp.model.cms.response;
 
 
-import com.zp.response.IErrorCode;
-import com.zp.response.ResultCode;
+import com.zp.framework.response.IErrorCode;
 import lombok.ToString;
 
 /**
