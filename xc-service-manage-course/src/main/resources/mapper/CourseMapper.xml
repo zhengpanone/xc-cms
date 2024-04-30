@@ -5,4 +5,8 @@
             resultType="com.zp.model.course.CourseBase">
         select * from course_base where id = #{id}
     </select>
+
+    <select id="findCourseList"  resultType="com.zp.model.course.CourseBase">
+        select * from course_base
+    </select>
 </mapper>

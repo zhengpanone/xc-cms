@@ -1,0 +1,17 @@
+server:
+  port: 31001
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: xc_cms_manage_system
+  data:
+    mongodb:
+      uri: mongodb://xc_user:123456@localhost:27017/xc_cms
+      database: xc_cms
+      username: xc_user
+      password: 123456
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

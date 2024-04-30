@@ -27,3 +27,5 @@ mybatis:
   #  type-aliases-package: com.gzu.photo.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+pagehelper:
+  helper-dialect: mysql

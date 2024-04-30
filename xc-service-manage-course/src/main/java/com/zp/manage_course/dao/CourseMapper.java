@@ -1,5 +1,6 @@
 package com.zp.manage_course.dao;
 
+import com.github.pagehelper.Page;
 import com.zp.model.course.CourseBase;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,4 +14,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CourseMapper {
 
     CourseBase findCourseBaseById(String id);
+
+    Page<CourseBase> findCourseList();
 }
