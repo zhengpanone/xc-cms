@@ -22,14 +22,33 @@ public class TeachPlan implements Serializable {
     @GeneratedValue(generator = "jpa‐uuid")
     @Column(length = 32)
     private String id;
+    @Column(name = "p_name")
     private String pName;
     private String parentId;
     private String grade;
+    @Column(name = "p_type")
     private String pType;
     private String description;
     private String courseId;
     private String status;
+    @Column(name = "order_by")
     private Integer orderBy;
     private Double timeLength;
     private String tryLearn;
+
+    public String getpName() {
+        return pName;
+    }
+
+    public void setpName(String pName) {
+        this.pName = pName;
+    }
+
+    public String getpType() {
+        return pType;
+    }
+
+    public void setpType(String pType) {
+        this.pType = pType;
+    }
 }
