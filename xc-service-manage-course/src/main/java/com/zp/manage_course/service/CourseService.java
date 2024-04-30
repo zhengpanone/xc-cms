@@ -1,17 +1,26 @@
 package com.zp.manage_course.service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.zp.framework.exception.ExceptionCast;
+import com.zp.framework.response.CommonPage;
+import com.zp.framework.response.CommonResult;
 import com.zp.framework.response.ResultCode;
 import com.zp.manage_course.dao.CourseBaseRepository;
+import com.zp.manage_course.dao.CourseMapper;
 import com.zp.manage_course.dao.TeachPlanMapper;
 import com.zp.manage_course.dao.TeachPlanRepository;
 import com.zp.model.course.CourseBase;
+import com.zp.model.course.CourseInfo;
 import com.zp.model.course.TeachPlan;
 import com.zp.model.course.TeachPlanNode;
+import com.zp.model.course.request.CourseListRequest;
+import com.zp.model.course.response.CourseCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
@@ -32,6 +41,8 @@ public class CourseService {
     TeachPlanRepository teachPlanRepository;
     @Autowired
     CourseBaseRepository courseBaseRepository;
+    @Autowired
+    CourseMapper courseMapper;
 
     //查询课程计划
     public TeachPlanNode findTeachPlanList(String courseId) {
@@ -67,6 +78,15 @@ public class CourseService {
     }
 
     /**
+     * 删除课程计划
+     *
+     * @param id
+     */
+    public void deleteTeachPlan(String id) {
+        teachPlanRepository.deleteById(id);
+    }
+
+    /**
      * 查询课程根节点，如果查询不到要自动添加根节点
      *
      * @param courseId
@@ -92,4 +112,61 @@ public class CourseService {
         }
         return teachPlanList.get(0).getId();
     }
+
+    /**
+     * 添加课程基本信息
+     *
+     * @param courseBase
+     * @return
+     */
+    public CourseBase addCourseBase(CourseBase courseBase) {
+        courseBase.setStatus("202002");
+        courseBaseRepository.save(courseBase);
+        return courseBase;
+    }
+
+
+    public Page<CourseInfo> findCoursePage(String companyId, int pageNum, int pageSize, CourseListRequest courseListRequest) {
+        if (courseListRequest == null) {
+            courseListRequest = new CourseListRequest();
+        }
+        //将公司id参数传入dao
+        courseListRequest.setCompanyId(companyId);
+        if (pageNum <= 0) {
+            pageNum = 1;
+        }
+        if (pageSize <= 0) {
+            pageSize = 10;
+        }
+        //设置分页参数
+        PageHelper.startPage(pageNum, pageSize);
+
+        return courseMapper.findCourseListPage(courseListRequest);
+    }
+
+    public CourseBase getCourseById(String courseId) {
+        Optional<CourseBase> optional = courseBaseRepository.findById(courseId);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        return null;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateCourseBase(String courseId, CourseBase courseBase) {
+        CourseBase one = getCourseById(courseId);
+        if (one == null) {
+            ExceptionCast.cast(CourseCode.COURSE_PUBLISH_COURSEIDISNULL);
+        }
+        one.setName(courseBase.getName());
+        one.setUsers(courseBase.getUsers());
+        one.setMt(courseBase.getMt());
+        one.setSt(courseBase.getSt());
+        one.setGrade(courseBase.getGrade());
+        one.setStudyModel(courseBase.getStudyModel());
+        one.setDescription(courseBase.getDescription());
+        courseBaseRepository.save(one);
+    }
+
+
 }
