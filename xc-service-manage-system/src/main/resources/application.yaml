@@ -12,6 +12,23 @@ spring:
       database: xc_cms
       username: xc_user
       password: 123456
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 1303f1ae-4167-40e9-86ee-a6907583be78
+        group: xc
+        metadata:
+          version: 1.0.0  # 元数据，可以定义任意KV，用于灰度发布、蓝绿部署等场景
+        # 心跳和超时设置
+        heartbeat-interval: 5000  # 心跳间隔时间，单位为毫秒，默认5秒
+        watch-delay: 1000  # 服务列表更新间隔时间，默认1秒
+        register-enabled: true  # 是否开启服务注册，默认是 true
+        enabled: true  # 是否启用 Nacos 服务发现
+        secure: false  # 是否使用 https 连接
+        #        access-key: your-access-key  # 鉴权配置（可选，如果 Nacos 开启鉴权）
+        #        secret-key: your-secret-key  # 鉴权密钥（可选）
+
   mvc:
-    pathmatch:
+    path-match:
       matching-strategy: ant_path_matcher
