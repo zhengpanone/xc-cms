@@ -12,6 +12,10 @@ spring:
       database: xc_cms
       username: xc_user
       password: 123456
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
