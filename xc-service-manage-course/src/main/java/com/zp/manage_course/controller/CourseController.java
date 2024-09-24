@@ -3,11 +3,9 @@ package com.zp.manage_course.controller;
 import com.github.pagehelper.Page;
 import com.zp.api.course.CourseControllerApi;
 import com.zp.framework.response.CommonPage;
+import com.zp.manage_course.service.CourseMarketService;
 import com.zp.manage_course.service.CourseService;
-import com.zp.model.course.CourseBase;
-import com.zp.model.course.CourseInfo;
-import com.zp.model.course.TeachPlan;
-import com.zp.model.course.TeachPlanNode;
+import com.zp.model.course.*;
 import com.zp.framework.response.CommonResult;
 import com.zp.model.course.request.CourseListRequest;
 import com.zp.model.request.QueryPageRequest;
@@ -25,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController implements CourseControllerApi {
     @Autowired
     CourseService courseService;
+    @Autowired
+    private CourseMarketService courseMarketService;
 
     //查询课程计划
     @Override
@@ -57,7 +57,20 @@ public class CourseController implements CourseControllerApi {
     @Override
     @PostMapping("/courseBase/update/{courseId}")
     public CommonResult<?> updateCourseBase(@PathVariable("courseId") String courseId, @RequestBody CourseBase courseBase) {
-        courseService.updateCourseBase(courseId,courseBase);
+        courseService.updateCourseBase(courseId, courseBase);
+        return CommonResult.success();
+    }
+
+    @PostMapping("/courseMarket/{courseId}")
+    @Override
+    public CourseMarket getCourseMarketById(@PathVariable String courseId) {
+        return courseMarketService.getCourseMarketById(courseId);
+    }
+
+    @PostMapping("/courseMarket/update/{courseId}")
+    @Override
+    public CommonResult<?> updateCourseMarket(@PathVariable String courseId, @RequestBody CourseMarket courseMarket) {
+        courseMarketService.updateCourseMarket(courseId, courseMarket);
         return CommonResult.success();
     }
 
