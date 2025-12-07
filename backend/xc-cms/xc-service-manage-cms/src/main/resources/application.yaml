@@ -1,0 +1,15 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: xc_cms_manage_cms
+  data:
+    mongodb:
+      uri: mongodb://localhost:30017
+      database: xc_cms
+      username: admin
+      password: mongodb123456
+  mvc:
+    path-match:
+      matching-strategy: ant_path_matcher

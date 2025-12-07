@@ -1,0 +1,58 @@
+package com.zp.xc.manage_cms.controller;
+
+import com.zp.xc.service.api.cms.CmsPageControllerApi;
+import com.zp.xc.manage_cms.service.CmsPageService;
+import com.zp.xc.model.cms.CmsPage;
+import com.zp.xc.model.cms.response.CmsPageResult;
+import com.zp.xc.model.request.QueryPageRequest;
+import com.zp.xc.common.response.QueryResponseResult;
+import com.zp.xc.common.response.ResponseResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/cms/page")
+public class CmsPageController implements CmsPageControllerApi {
+    @Autowired
+    CmsPageService cmsPageService;
+
+    @Override
+    @GetMapping("/list/{page}/{size}")
+    public QueryResponseResult findList(@PathVariable("page") int page, @PathVariable("size") int size, QueryPageRequest queryPageRequest) {
+       /* QueryResult<CmsPage> queryResult = new QueryResult<>();
+        List<CmsPage> list = new ArrayList<>();
+        CmsPage cmsPage = new CmsPage();
+        cmsPage.setPageName("testPage");
+        list.add(cmsPage);
+        queryResult.setList(list);
+        queryResult.setTotal(1);
+        QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS, queryResult);
+        return queryResponseResult;*/
+        return cmsPageService.findList(page, size, queryPageRequest);
+
+    }
+
+    @Override
+    @PostMapping("/add")
+    public CmsPageResult addCmsPage(@RequestBody CmsPage cmsPage) { // @RequestBody json数据转对象
+        return cmsPageService.add(cmsPage);
+    }
+
+    @Override
+    @GetMapping("/get/{id}")
+    public CmsPage findById(@PathVariable("id") String id) {
+        return cmsPageService.findById(id);
+    }
+
+    @Override
+    @PutMapping("/edit/{id}")
+    public CmsPageResult edit(@PathVariable("id") String id, @RequestBody CmsPage page) {
+        return cmsPageService.update(id,page);
+    }
+
+    @Override
+    @DeleteMapping("/delete/{id}")
+    public ResponseResult delete(@PathVariable("id") String id) {
+        return cmsPageService.delete(id);
+    }
+}
