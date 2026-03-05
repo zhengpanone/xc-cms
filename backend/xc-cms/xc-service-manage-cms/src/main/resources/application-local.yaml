@@ -1,13 +1,11 @@
 server:
   port: 18091
 spring:
-  profiles:
-    active: dev
   application:
     name: xc_cms_manage_cms
   data:
     mongodb:
-      uri: mongodb://xc_user:123456@localhost:27017/xc_cms
+      uri: mongodb://xc_user:123456@localhost:30017/xc_cms
       database: xc_cms
       username: xc_user
       password: 123456

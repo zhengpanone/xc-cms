@@ -1,3 +1,38 @@
+## MongoDb
+```shell
+kubectl exec -it mongodb-55b768cff5-7xhmg -- mongosh
+kubectl exec -it mongodb-0 -- mongosh -u admin -p mongodb123456 --authenticationDatabase admin
+```
+
+```javascript
+// 认证登录
+use admin
+db.auth("admin","mongodb123456")
+// 创建数据库
+use xc_cms
+// 查看数据库
+show dbs
+// 创建用户
+db.createUser({user:"xc_user",pwd:"123456",roles:[{role:"readWrite",db:"xc_cms"}]})
+```
+
+```shell
+kubectl cp cms_config.json mongodb-55b768cff5-7xhmg:/tmp/cms_config.json
+kubectl exec -it mongodb-55b768cff5-7xhmg -- bash
+
+```
+
+```shell
+mongoimport --db xc_cms --collection cms_config --file /tmp/cms_config.json  --jsonArray -u admin -p mongodb123456 --authenticationDatabase admin
+mongoimport --db xc_cms --collection cms_config --file /tmp/cms_config.json  -u admin -p mongodb123456 --authenticationDatabase admin
+mongoimport --db xc_cms --collection cms_page --file /tmp/cms_page.json -u admin -p mongodb123456 --authenticationDatabase admin
+mongoimport --db xc_cms --collection cms_site --file /tmp/cms_site.json -u admin -p mongodb123456 --authenticationDatabase admin
+mongoimport --db xc_cms --collection cms_site_server --file /tmp/cms_site_server.json -u admin -p mongodb123456 --authenticationDatabase admin
+mongoimport --db xc_cms --collection sys_dictionary --file /tmp/sys_dictionary.json -u admin -p mongodb123456 --authenticationDatabase admin
+mongoimport --db xc_cms --collection user_test --file /tmp/user_test.json -u admin -p mongodb123456 --authenticationDatabase admin
+```
+
+
 ## 工程结构
 - parent工程: 父工程,提供依赖管理
 - common工程: 通用工程,提供各层封装
